@@ -1,0 +1,293 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f8f9fa; /* Fundo branco limpo */
+    color: #343a40; 
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- BARRA LATERAL FIXA (MANTIDA) --- */
+#sidebar-menu {
+    width: 240px; 
+    background-color: #ffffff; 
+    color: #343a40; 
+    padding: 30px 0;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    text-align: center;
+    border-right: 1px solid #dee2e6;
+    border-top-right-radius: 12px; /* Bordas arredondadas topo-direito */
+    border-bottom-right-radius: 12px; /* Bordas arredondadas base-direito */
+}
+
+#main-content {
+    margin-left: 240px; 
+    width: 100%;
+    padding: 30px 20px;
+    box-sizing: border-box; 
+    text-align: center;
+}
+
+h1 {
+    color: #343a40;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: none;
+    width: 100%;
+}
+
+/* --- CONTROLES DENTRO DO SIDEBAR --- */
+#controls {
+    display: block; 
+    padding: 0 10px;
+    margin: 0;
+    background-color: transparent; 
+    box-shadow: none;
+}
+
+#controls h2 {
+    font-size: 14px;
+    color: #343a40; /* Texto mais escuro e legível */
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 10px;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+    border-bottom: none; /* Remove a linha */
+}
+
+#controls button {
+    display: block; 
+    width: 100%;
+    text-align: left;
+    background-color: transparent; 
+    color: #343a40; 
+    padding: 15px 20px;
+    margin: 5px 0;
+    border-radius: 0;
+    font-size: 16px;
+    box-shadow: none;
+    transition: background-color 0.2s;
+    border: none;
+    text-transform: uppercase;
+    border-left: 4px solid transparent; 
+}
+
+/* Estilo para o Estado Ativo */
+.control-button.active {
+    background-color: #e9ecef; /* Fundo cinza suave */
+    color: #007bff !important; /* Texto azul vibrante */
+    font-weight: 700;
+    border-left: 4px solid #007bff !important; /* A barra azul lateral */
+}
+
+#controls button:hover {
+    background-color: #f0f0f0;
+    color: #343a40;
+    border-left: 4px solid transparent; /* Garante que a barra só apareça no 'active' */
+}
+
+/* Garante que o hover no ativo mantenha a cor */
+#controls button.active:hover {
+    background-color: #e9ecef;
+    color: #007bff !important;
+    border-left: 4px solid #007bff !important;
+}
+
+/* --- LAYOUT DOS BLOCOS --- */
+.date-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 30px; 
+    margin-bottom: 60px;
+    max-width: 1200px;
+    margin: 0 auto 60px auto; 
+}
+
+/* --- ESTILIZAÇÃO DOS BLOCOS INDIVIDUAIS (CARDS) --- */
+.date-block {
+    color: #343a40; /* Cor principal do texto */
+    background-color: #ffffff; /* Fundo do Card Branco */
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 180px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+    height: 250px; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.date-block:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); 
+}
+
+/* Cores de Destaque no Bloco (Mantenha as cores para o JS usar, mas mude o fundo para branco) */
+.date-block[style*="#1053A3"] { 
+    border: 2px solid #007bff; /* Borda azul para distinção */
+}
+
+.date-block[style*="#6A1B9A"] { 
+    border: 2px solid #6f42c1; /* Borda roxa para distinção */
+}
+
+/* TÍTULO DA ETAPA (Preto, Negrito, Centralizado) */
+.step-name {
+    font-size: 17px;
+    font-weight: 700; /* Negrito */
+    text-decoration: none; 
+    margin-bottom: 10px;
+    letter-spacing: 0;
+    color: #000000; /* Preto Sólido */
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ffffff; /* Linha de separação discreta */
+    width: 100%;
+}
+
+/* DATAS DE VENCIMENTO (Preto Sólido) */
+.step-date {
+    font-size: 28px; 
+    font-weight: 800;
+    line-height: 1.2;
+    text-shadow: none;
+    color: #000000 !important; /* FORÇA PRETO em TODAS as datas, anulando o .past-due */
+}
+
+/* --- ESTILIZAÇÃO DAS ETIQUETAS DE CÓPIA --- */
+.copy-tag {
+    display: block;
+    font-size: 11px;
+    margin-top: 2px; 
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.1s;
+    white-space: normal;
+    word-break: break-all;
+    margin-bottom: 5px; 
+    /* Estilo Base: Fundo Claro, Letra Escura */
+    background-color: #f0f0f0;
+    color: #000000;
+    border: 1px solid #dee2e6;
+}
+
+.copy-tag:hover {
+    background-color: #e9ecef;
+    transform: scale(1.01);
+}
+
+/* Tags Específicas */
+.copy-tag.primary-tag {
+    margin-top: 8px;
+    margin-top: auto; 
+    margin-bottom: 5px;
+    font-weight: 700;
+    /* Primary e GURU (Alternate) usam Fundo Claro/Texto Preto */
+}
+
+.copy-tag.alternate-tag {
+    margin-top: 2px;
+    margin-bottom: 5px;
+    font-weight: 700;
+    /* Primary e GURU (Alternate) usam Fundo Claro/Texto Preto */
+}
+
+/* Tag INFOBIP (Laranja/Preto) */
+.copy-tag.infobip-tag {
+    background-color: #ff9800; /* Laranja Vívido */
+    color: #000000; /* Texto Preto */
+    font-weight: 700;
+    border: 1px solid #ff9800;
+}
+
+
+/* --- ESTILOS DA MATRIZ HISTÓRICA --- */
+#matrix-container {
+    margin-top: 50px;
+    padding: 20px; 
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    max-width: 640px; 
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: auto; 
+    border: 1px solid #dee2e6;
+}
+
+/* Regra para Esconder Conteúdo */
+.hidden {
+    display: none !important;
+}
+
+#nav-menu {
+    padding: 10px; /* Padding interno */
+    border-bottom: 1px solid #e9ecef; /* Linha de separação sutil */
+    margin-bottom: 20px;
+}
+
+/* --- ESTILIZAÇÃO DAS ABAS (NAVEGAÇÃO) --- */
+.nav-tab {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: transparent;
+    color: #495057; /* Cor de texto inativo */
+    padding: 12px 10px;
+    margin-bottom: 8px; /* Espaço entre os botões */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px; /* Borda arredondada nas abas */
+    transition: all 0.3s ease-in-out;
+}
+
+/* 1. ESTADO ATIVO (Selecionado) */
+.nav-tab.active {
+    background-color: #007bff; /* Azul Sólido */
+    color: white !important; /* Texto branco no ativo */
+    font-weight: 700;
+}
+
+/* 2. ESTADO HOVER (Passar o mouse) */
+.nav-tab:hover {
+    background-color: #f0f0f0; /* Fundo cinza muito suave */
+    color: #343a40;
+}
+
+.past-due-matrix {
+    background-color: #f8d7da !important; /* Vermelho pastel suave */
+    color: #ff00004f; /* Texto bordô/escuro */
+    opacity: 1;
+}
+
+/* 2. Estilo para o Dia de Hoje (Vermelho Forte/Vibrante) */
+.today-highlight {
+    background-color: #ff0000c7 !important; /* Laranja-Vermelho Sólido */
+    color: white !important; /* Texto branco para alto contraste */
+    font-weight: 900;
+}
+
+.juridica-sector .copy-tag.alternate-tag {
+    background-color: #ff9800 !important; /* Laranja Vívido */
+    color: #000000 !important; /* Texto Preto */
+    font-weight: 700;
+    border: 1px solid #ff9800 !important;
+}

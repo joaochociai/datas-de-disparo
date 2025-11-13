@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datas de disparo</title>
+
+    <link rel="icon" type="image/png" href="icon.png">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="sidebar-menu">
+        
+        <div id="nav-menu">
+            <button class="nav-tab active" onclick="showTab('tab-disparos', this)">Datas de Disparo</button>
+            <button class="nav-tab" onclick="showTab('tab-historico', this)">Matriz Histórica</button>
+        </div>
+
+        <div id="controls">
+            <h2>DIAS DE DISPARO A EXIBIR:</h2>
+            <button class="control-button active" onclick="calculateDates(1, this)">1 Dia</button>
+            <button class="control-button" onclick="calculateDates(2, this)">2 Dias</button>
+            <button class="control-button" onclick="calculateDates(3, this)">3 Dias</button>
+        </div>
+    </div>
+    
+    <div id="main-content">
+        
+        <div id="tab-disparos" class="tab-content active">
+            <h1>DATAS DE DISPARO</h1>
+            
+            <div id="cob-container" class="date-row">
+                </div>
+            
+            <div id="juridica-container" class="date-row">
+                </div>
+        </div>
+
+        <div id="tab-historico" class="tab-content hidden">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #343a40;">HISTÓRICO DE DATAS DE DISPARO</h2>
+            <div id="matrix-container">
+                </div>
+        </div>
+        
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

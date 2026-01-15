@@ -89,6 +89,8 @@ function calculateDates(daysCount, clickedButton) {
     
     const todayTagDate = formatTagDate(today); 
     const todayTagDateAlt = formatTagDateAlt(today); 
+    const extraContainer = document.getElementById('extra-tags-container');
+    if (extraContainer) extraContainer.innerHTML = '';
 
     steps.forEach(step => {
         const dateBlock = document.createElement('div');
@@ -169,6 +171,34 @@ function calculateDates(daysCount, clickedButton) {
             document.getElementById('cob-container').appendChild(dateBlock);
         }
     });
+    
+    const extraBlock = document.createElement('div');
+    extraBlock.className = 'date-block extra-tags-sector';
+
+    let extraHTML = `<div class="step-name">TAGS ESPECIAIS</div>`;
+
+    // Lista de configurações das tags extras
+    const extraTags = [
+        // Formatos YYYY_MM_DD_...
+        { text: `${todayTagDate}_1_cobranca_varias_parcelas`, class: 'primary-tag' },
+        { text: `${todayTagDate}_2_cobranca_varias_parcelas`, class: 'primary-tag' },
+        { text: `${todayTagDate}_3_cobranca_varias_parcelas`, class: 'primary-tag' },
+        // Formatos ..._DD_MM_YYYY
+        { text: `1_cobranca_varias_parcelas_${todayTagDateAlt}`, class: 'infobip-tag' },
+        { text: `2_cobranca_varias_parcelas_${todayTagDateAlt}`, class: 'infobip-tag' },
+        { text: `3_cobranca_varias_parcelas_${todayTagDateAlt}`, class: 'infobip-tag' },
+        // Não atendeu (Laranja/Infobip style para destaque)
+        { text: `Cobrança_não_atendeu_manhã_${todayTagDateAlt}`, class: 'infobip-tag' },
+        { text: `Cobrança_não_atendeu_tarde_${todayTagDateAlt}`, class: 'infobip-tag' },
+        { text: `Jurídico_não_atendeu_${todayTagDateAlt}`, class: 'infobip-tag' },
+    ];
+
+    extraTags.forEach(tag => {
+        extraHTML += `<span class="copy-tag ${tag.class}" onclick="copyTag('${tag.text}')">${tag.text}</span>`;
+    });
+
+    extraBlock.innerHTML = extraHTML;
+    if (extraContainer) extraContainer.appendChild(extraBlock);
 }
 
 
@@ -176,8 +206,8 @@ function calculateDates(daysCount, clickedButton) {
 
 function generateMatrix() {
     // 1. Definição das datas de início e fim da matriz (01/08/2025 a 31/12/2025)
-    const startDate = new Date(2025, 7, 1); 
-    const endDate = new Date(2025, 11, 31);
+    const startDate = new Date(2025, 10, 1); 
+    const endDate = new Date(2026, 11, 31);
     
     // 2. Definição das colunas 
     const columns = [
@@ -260,34 +290,26 @@ function generateMatrix() {
 
 // --- NOVO: FUNÇÃO PARA TROCA DE ABAS ---
 function showTab(tabId, clickedButton) {
-    // 1. Desativa o estilo 'active' em TODOS os botões de navegação
-    document.querySelectorAll('.nav-tab').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    // 2. Esconde todo o conteúdo da aba
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.add('hidden');
-    });
+    document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
 
-    // 3. Mostra a aba selecionada
     document.getElementById(tabId).classList.remove('hidden');
-    
-    // 4. ATIVA O ESTILO do botão clicado
-    if (clickedButton) {
-        clickedButton.classList.add('active');
-    }
+    if (clickedButton) clickedButton.classList.add('active');
 
-    // 5. Gerencia a visibilidade dos controles de 1/2/3 dias
     const controls = document.getElementById('controls');
+    
     if (tabId === 'tab-historico') {
         controls.style.display = 'none';
-        // Garante que a matriz seja carregada (caso não tenha sido na inicialização)
         generateMatrix(); 
+    } else if (tabId === 'tab-ligacoes') {
+        controls.style.display = 'block';
+        // Captura quantos dias estão selecionados no botão ativo dos controles
+        const activeDays = document.querySelector('#controls .control-button.active').innerText.split(' ')[0];
+        calculateCalls(parseInt(activeDays));
     } else {
-        controls.style.display = 'block'; // Mostra os botões 1/2/3 dias
-        // Chama o cálculo inicial das datas de disparo
-        calculateDates(1); 
+        controls.style.display = 'block';
+        const activeDays = document.querySelector('#controls .control-button.active').innerText.split(' ')[0];
+        calculateDates(parseInt(activeDays)); 
     }
 }
 
@@ -309,3 +331,75 @@ document.addEventListener('DOMContentLoaded', () => {
         showTab('tab-disparos', document.querySelector('.nav-tab'));
     }
 });
+
+// 1. Definição dos passos de ligação (os 3 primeiros são individuais)
+const callStepsFixos = [
+    { name: 'LEMBRETE (ÁUDIO)', interval: 0 },
+    { name: '7 DIAS (ÁUDIO)', interval: 7 },
+    { name: '2ª COB. (ÁUDIO)', interval: 15 }
+];
+
+// 2. Intervalos acumulativos (D+15 + 2, 4, 6... até 14)
+const acumulativosIntervals = [17, 19, 21, 23, 25, 27, 29];
+
+function calculateCalls(daysCount) {
+    const callContainer = document.getElementById('ligacoes-container');
+    callContainer.innerHTML = '';
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // --- GERAÇÃO DOS 3 BLOCOS FIXOS ---
+    callStepsFixos.forEach(step => {
+        const dateBlock = document.createElement('div');
+        dateBlock.className = 'date-block ligacoes-sector';
+        
+        let datesHTML = `<div class="step-name">${step.name}</div>`;
+        const loopCount = step.interval === 0 ? 1 : daysCount; 
+
+        for (let i = loopCount - 1; i >= 0; i--) { 
+            const currentDisparoDate = addDays(today, -i); 
+            const targetVencimentoDate = addDays(currentDisparoDate, -step.interval);
+            datesHTML += `<div class="step-date">${formatDate(targetVencimentoDate)}</div>`;
+        }
+        
+        dateBlock.innerHTML = datesHTML;
+        callContainer.appendChild(dateBlock);
+    });
+
+    // --- GERAÇÃO DO BLOCO AGRUPADO (COB +2 até +14) ---
+    const groupBlock = document.createElement('div');
+    groupBlock.className = 'date-block ligacoes-sector group-block'; // Classe nova para ajuste de altura
+    
+    let groupHTML = `<div class="step-name">ACUMULATIVO ENTRE 2° E 3° COB</div>`;
+    groupHTML += `<div class="scroll-area">`; // Área com scroll caso tenha muitos dias
+
+    acumulativosIntervals.forEach(interval => {
+        const diff = interval - 15;
+        groupHTML += `<div class="group-item">`;
+        groupHTML += `<span class="item-label">2°COB +${diff}d:</span>`;
+        
+        // Para o agrupado, mostraremos apenas a data referente ao "Dia 1" de disparo (hoje)
+        const targetVencimentoDate = addDays(today, -interval);
+        groupHTML += `<span class="item-date">${formatDate(targetVencimentoDate)}</span>`;
+        groupHTML += `</div>`;
+    });
+
+    groupHTML += `</div>`;
+    groupBlock.innerHTML = groupHTML;
+    callContainer.appendChild(groupBlock);
+}
+
+function handleControlClick(days, btn) {
+    // Primeiro atualiza o visual dos botões
+    const controlButtons = btn.parentNode.querySelectorAll('.control-button');
+    controlButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Verifica qual aba está visível e atualiza os dados dela
+    if (!document.getElementById('tab-ligacoes').classList.contains('hidden')) {
+        calculateCalls(days);
+    } else {
+        calculateDates(days);
+    }
+}

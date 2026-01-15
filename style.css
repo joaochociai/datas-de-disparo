@@ -291,3 +291,56 @@ h1 {
     font-weight: 700;
     border: 1px solid #ff9800 !important;
 }
+
+/* Ajustes para o Bloco Agrupado de Ligações */
+.group-block {
+    min-width: 220px;
+    height: auto !important; /* Permite que o bloco cresça para baixo */
+    min-height: 250px;
+}
+
+.scroll-area {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.group-item:last-child {
+    border-bottom: none;
+}
+
+.item-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+}
+
+.item-date {
+    font-size: 16px;
+    font-weight: 800;
+    color: #000;
+}
+
+/* Cor verde para o setor de ligações */
+.ligacoes-sector {
+    border: 2px solid #28a745 !important;
+}
+
+.extra-tags-sector {
+    border: 2px solid #495057 !important;
+    min-width: 300px !important; /* Bloco um pouco mais largo para caber os nomes longos */
+    height: auto !important;
+    padding-bottom: 20px !important;
+}
+
+.extra-tags-sector .copy-tag {
+    text-align: left;
+    padding-left: 10px;
+}

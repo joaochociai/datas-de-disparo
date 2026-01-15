@@ -16,6 +16,7 @@
         <div id="nav-menu">
             <button class="nav-tab active" onclick="showTab('tab-disparos', this)">Datas de Disparo</button>
             <button class="nav-tab" onclick="showTab('tab-historico', this)">Matriz Histórica</button>
+            <button class="nav-tab" onclick="showTab('tab-ligacoes', this)">Ligações</button>
         </div>
 
         <div id="controls">
@@ -31,17 +32,19 @@
         <div id="tab-disparos" class="tab-content active">
             <h1>DATAS DE DISPARO</h1>
             
-            <div id="cob-container" class="date-row">
-                </div>
-            
-            <div id="juridica-container" class="date-row">
-                </div>
+            <div id="cob-container" class="date-row"></div>
+            <div id="juridica-container" class="date-row"></div>
+            <div id="extra-tags-container" class="date-row"></div>
+        </div>
+
+        <div id="tab-ligacoes" class="tab-content hidden">
+            <h1>RÉGUA DE LIGAÇÕES</h1>
+            <div id="ligacoes-container" class="date-row"></div>
         </div>
 
         <div id="tab-historico" class="tab-content hidden">
             <h2 style="text-align: center; margin-bottom: 20px; color: #343a40;">HISTÓRICO DE DATAS DE DISPARO</h2>
-            <div id="matrix-container">
-                </div>
+            <div id="matrix-container"></div>
         </div>
         
     </div>

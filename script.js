@@ -51,6 +51,7 @@ function highlightCell(cell, action) {
 
 // Definição das etapas, intervalos e BASES DAS TAGS
 const steps = [
+    { name: 'LEMBRETE 5 DIAS', interval: -5, color: '#1053A3', tagBase: '_Lembrete_5_dias'},
     { name: 'DIA DO VENCIMENTO', interval: 0, color: '#1053A3', tagBase: '_Lembrete_vencimento', tagBaseInfobip: 'Lembrete_vencimento_' }, 
     { name: '1ª COBRANÇA', interval: 1, color: '#1053A3', tagBase: '_1_cobranca', tagBaseInfobip: '1_cobranca_' },
     { name: '7 DIAS', interval: 7, color: '#1053A3', tagBase: '_7_dias', tagBaseInfobip: 'Lembrete_7_dias_' },
@@ -106,7 +107,7 @@ function calculateDates(daysCount, clickedButton) {
         
         // --- 1. Geração das Datas de Vencimento ---
         // CORREÇÃO: loopCount agora usa o daysCount do botão, exceto para o Dia do Vencimento.
-        const loopCount = step.interval === 0 ? 1 : daysCount; 
+        const loopCount = (step.interval === 0 || step.interval === -5) ? 1 : daysCount;
         
         for (let i = loopCount - 1; i >= 0; i--) { 
             let targetVencimentoDate;

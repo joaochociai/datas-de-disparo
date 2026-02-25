@@ -342,6 +342,7 @@ const callStepsFixos = [
 
 // 2. Intervalos acumulativos (D+15 + 2, 4, 6... até 14)
 const acumulativosIntervals = [17, 19, 21, 23, 25, 27, 29];
+const acumulativosJuridicoIntervals = [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
 
 function calculateCalls(daysCount) {
     const callContainer = document.getElementById('ligacoes-container');
@@ -350,7 +351,7 @@ function calculateCalls(daysCount) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // --- GERAÇÃO DOS 3 BLOCOS FIXOS ---
+    // --- GERAÇÃO DOS 3 BLOCOS FIXOS (MANTIDO) ---
     callStepsFixos.forEach(step => {
         const dateBlock = document.createElement('div');
         dateBlock.className = 'date-block ligacoes-sector';
@@ -368,27 +369,45 @@ function calculateCalls(daysCount) {
         callContainer.appendChild(dateBlock);
     });
 
-    // --- GERAÇÃO DO BLOCO AGRUPADO (COB +2 até +14) ---
-    const groupBlock = document.createElement('div');
-    groupBlock.className = 'date-block ligacoes-sector group-block'; // Classe nova para ajuste de altura
+    // --- BLOCO AGRUPADO 1: 2° AO 3° COB (MANTIDO) ---
+    const groupBlock1 = document.createElement('div');
+    groupBlock1.className = 'date-block ligacoes-sector group-block';
     
-    let groupHTML = `<div class="step-name">ACUMULATIVO ENTRE 2° E 3° COB</div>`;
-    groupHTML += `<div class="scroll-area">`; // Área com scroll caso tenha muitos dias
+    let groupHTML1 = `<div class="step-name">ACUMULATIVO ENTRE 2° E 3° COB</div>`;
+    groupHTML1 += `<div class="scroll-area">`;
 
     acumulativosIntervals.forEach(interval => {
         const diff = interval - 15;
-        groupHTML += `<div class="group-item">`;
-        groupHTML += `<span class="item-label">2°COB +${diff}d:</span>`;
-        
-        // Para o agrupado, mostraremos apenas a data referente ao "Dia 1" de disparo (hoje)
+        groupHTML1 += `<div class="group-item">`;
+        groupHTML1 += `<span class="item-label">2°COB +${diff}d:</span>`;
         const targetVencimentoDate = addDays(today, -interval);
-        groupHTML += `<span class="item-date">${formatDate(targetVencimentoDate)}</span>`;
-        groupHTML += `</div>`;
+        groupHTML1 += `<span class="item-date">${formatDate(targetVencimentoDate)}</span>`;
+        groupHTML1 += `</div>`;
     });
 
-    groupHTML += `</div>`;
-    groupBlock.innerHTML = groupHTML;
-    callContainer.appendChild(groupBlock);
+    groupHTML1 += `</div>`;
+    groupBlock1.innerHTML = groupHTML1;
+    callContainer.appendChild(groupBlock1);
+
+    // --- NOVO BLOCO AGRUPADO 2: 3° COB AO JURÍDICO (31 a 44 DIAS) ---
+    const groupBlock2 = document.createElement('div');
+    groupBlock2.className = 'date-block ligacoes-sector group-block';
+    
+    let groupHTML2 = `<div class="step-name">ACUMULATIVO ENTRE 3° COB E JUR</div>`;
+    groupHTML2 += `<div class="scroll-area">`;
+
+    acumulativosJuridicoIntervals.forEach(interval => {
+        const diff = interval - 30; // Diferença a partir da 3ª cobrança (dia 30)
+        groupHTML2 += `<div class="group-item">`;
+        groupHTML2 += `<span class="item-label">3°COB +${diff}d:</span>`;
+        const targetVencimentoDate = addDays(today, -interval);
+        groupHTML2 += `<span class="item-date">${formatDate(targetVencimentoDate)}</span>`;
+        groupHTML2 += `</div>`;
+    });
+
+    groupHTML2 += `</div>`;
+    groupBlock2.innerHTML = groupHTML2;
+    callContainer.appendChild(groupBlock2);
 }
 
 function handleControlClick(days, btn) {
